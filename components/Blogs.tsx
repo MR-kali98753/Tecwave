@@ -2,10 +2,12 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
 
 const Blogs = () => {
   const [data, setData] = useState<any[]>([]);
   const [limit, setLimit] = useState<number>(3);
+  const router = useRouter(); // Initialize the router
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,6 +27,11 @@ const Blogs = () => {
     setLimit(limit + 3);
   };
 
+  // Function to handle blog card click
+  const handleBlogClick = (id: string) => {
+    router.push(`/blogs/${id}`); // Navigate to the blog detail page
+  };
+
   return (
     <div className="container mx-auto xl:max-w-[1180px] text-white pb-[40px]">
       <h1 className="text-start text-[24px] font-bold">Latest Post</h1>
@@ -38,7 +45,11 @@ const Blogs = () => {
               : null;
 
             return (
-              <div key={index} className="cursor-pointer w-full border border-[#2f3241]">
+              <div 
+                key={index} 
+                className="cursor-pointer w-full border border-[#2f3241] hover:border-[#4B6BFB] transition-colors"
+                onClick={() => handleBlogClick(item.id)} // Add click handler
+              >
                 <div className="h-[240px] w-full overflow-hidden">
                   {imageUrl ? (
                     <img
@@ -60,7 +71,7 @@ const Blogs = () => {
                   <div className="flex items-center gap-[25px] pt-[10px] text-[#97989F]">
                     <div className="flex items-center gap-[10px]">
                       <div>
-                        <img className="w-12 h-12 rounded-full object-cover" src={`http://localhost:1337${item?.avatar?.url}`} alt="" />
+                        <img className="w-12 h-12 rounded-full object-cover" src={`${process.env.NEXT_PUBLIC_API_URL}${item?.avatar?.url}`} alt="" />
                       </div>
                       <p>{item?.author}</p>
                     </div>
